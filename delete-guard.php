@@ -3,7 +3,7 @@
  * Plugin Name: Delete Guard
  * Plugin URI: https://github.com/thalidzhokov/wp-delete-guard
  * Description: Per post type deletion policies: logging, trash blocking, and permanent delete protection.
- * Version: 1.0.0
+ * Version: 1.0.1
  * Author: Albert Thalidzhokov
  * Author URI: https://github.com/thalidzhokov/wp-delete-guard
  * Text Domain: delete-guard
@@ -16,7 +16,7 @@
 
 defined('ABSPATH') || exit;
 
-define('DELETE_GUARD_VERSION', '1.0.0');
+define('DELETE_GUARD_VERSION', '1.0.1');
 define('DELETE_GUARD_FILE', __FILE__);
 define('DELETE_GUARD_DIR', plugin_dir_path(__FILE__));
 define('DELETE_GUARD_URL', plugin_dir_url(__FILE__));

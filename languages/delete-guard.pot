@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Delete Guard plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Delete Guard 1.0.0\n"
+"Project-Id-Version: Delete Guard 1.0.1\n"
 "Report-Msgid-Bugs-To: https://github.com/thalidzhokov/wp-delete-guard\n"
 "Language-Team: English\n"
 "Language: en_US\n"
@@ -18,4 +18,111 @@ msgid "Delete Guard"
 msgstr ""
 
 msgid "Per post type deletion policies: logging, trash blocking, and permanent delete protection."
+msgstr ""
+
+msgid "Settings saved."
+msgstr ""
+
+msgid "%d log entry deleted."
+msgid_plural "%d log entries deleted."
+msgstr[0] ""
+msgstr[1] ""
+
+msgid "Settings"
+msgstr ""
+
+msgid "Log"
+msgstr ""
+
+msgid "New post types are off by default. Administrators and super admins can delete even when a mode blocks it; those actions are still logged."
+msgstr ""
+
+msgid "Navigation Menus (wp_navigation) are block-theme menus. Classic Appearance → Menus use Navigation Menu items (nav_menu_item); if that row is Off, it follows the Navigation Menus mode."
+msgstr ""
+
+msgid "Current <code>EMPTY_TRASH_DAYS</code>: <strong>%s</strong>."
+msgstr ""
+
+msgid "Post type"
+msgstr ""
+
+msgid "Mode"
+msgstr ""
+
+msgid "Allow EMPTY_TRASH_DAYS cleanup"
+msgstr ""
+
+msgid "Via cron"
+msgstr ""
+
+msgid "Save settings"
+msgstr ""
+
+msgid "Status"
+msgstr ""
+
+msgid "All"
+msgstr ""
+
+msgid "Action"
+msgstr ""
+
+msgid "Type"
+msgstr ""
+
+msgid "Filter"
+msgstr ""
+
+msgid "Delete log entries older than 30 days?"
+msgstr ""
+
+msgid "Delete logs older than 30 days"
+msgstr ""
+
+msgid "Date"
+msgstr ""
+
+msgid "User"
+msgstr ""
+
+msgid "Source"
+msgstr ""
+
+msgid "Post"
+msgstr ""
+
+msgid "No entries."
+msgstr ""
+
+msgid "Off"
+msgstr ""
+
+msgid "Log only"
+msgstr ""
+
+msgid "Block trash"
+msgstr ""
+
+msgid "Block permanent delete"
+msgstr ""
+
+msgid "Allowed"
+msgstr ""
+
+msgid "Denied"
+msgstr ""
+
+msgid "Move to trash"
+msgstr ""
+
+msgid "Permanent delete"
+msgstr ""
+
+msgid "Restore"
+msgstr ""
+
+msgid "System"
+msgstr ""
+
+msgid "(no title)"
 msgstr ""

@@ -28,12 +28,14 @@ WordPress plugin: per post type deletion policies — logging, trash blocking, a
 |------|-------|------------------|-------------------------|
 | Off | allowed, no log | allowed, no log | allowed, no log |
 | Log only | allowed + log | allowed + log | allowed + log |
-| Block trash | denied* + log | denied* + log | denied* + log |
 | Block permanent delete | allowed + log | denied* + log | optional + log |
+| Block trash | denied* + log | denied* + log | denied* + log |
 
 \* Administrators / super admins are allowed; the event is logged as allowed.
 
 New post types default to **Off**.
+
+**Menus:** `wp_navigation` is Site Editor / block-theme menus. Classic Appearance → Menus use `nav_menu_item`; if that row is Off, it follows the Navigation Menus mode. Log titles look like `Menu name › Item title`.
 
 ### Installation
 
@@ -55,7 +57,7 @@ Blocks run through WordPress filters (not UI-only):
 - `pre_delete_post`
 - `pre_delete_attachment`
 
-Successful actions are logged on `trashed_post`, `deleted_post`, `untrashed_post`.
+Allowed trash/delete are logged in those `pre_*` filters (before the post is removed). Restore is logged on `untrashed_post`. Denied attempts are logged when the block runs.
 
 If cron cleanup is denied, `_wp_trash_meta_time` is refreshed so `wp_scheduled_delete` does not retry the same post every day.
 
@@ -117,12 +119,14 @@ GPLv2 or later (WordPress plugin license). See `license.txt`.
 |-------|---------|-----------------|-------------------------|
 | Выключено | да, без лога | да, без лога | да, без лога |
 | Только логирование | да + лог | да + лог | да + лог |
-| Запрет корзины | отказ* + лог | отказ* + лог | отказ* + лог |
 | Запрет полного удаления | да + лог | отказ* + лог | по флагу + лог |
+| Запрет корзины | отказ* + лог | отказ* + лог | отказ* + лог |
 
 \* Админы / суперадмины могут; в логе статус «одобрено».
 
 Новые типы постов по умолчанию **выключены**.
+
+**Меню:** `wp_navigation` — меню Site Editor / блочной темы. Классика (Внешний вид → Меню) — `nav_menu_item`; если для них режим Выключено, действует режим «Меню навигации». В логе: `Имя меню › Пункт`.
 
 ### Установка
 
@@ -144,7 +148,7 @@ git clone https://github.com/thalidzhokov/wp-delete-guard.git wp-content/plugins
 - `pre_delete_post`
 - `pre_delete_attachment`
 
-Успешные действия пишутся на `trashed_post`, `deleted_post`, `untrashed_post`.
+Одобренные trash/delete пишутся в этих `pre_*` (до удаления поста). Восстановление — на `untrashed_post`. Отказы — в момент блокировки.
 
 Если cron-очистка запрещена, обновляется `_wp_trash_meta_time`, чтобы `wp_scheduled_delete` не долбил один и тот же пост каждый день.
 
