@@ -17,14 +17,14 @@ function delete_guard_uninstall_site(): void {
 	delete_option('delete_guard_db_version');
 
 	$table = $wpdb->prefix . 'delete_guard_log';
-	// phpcs:ignore WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- table name is prefixed and fixed.
-	$wpdb->query("DROP TABLE IF EXISTS {$table}");
+	// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.DirectDatabaseQuery.SchemaChange, PluginCheck.Security.DirectDB.UnescapedDBParameter -- uninstall drops our own table.
+	$wpdb->query('DROP TABLE IF EXISTS `' . esc_sql($table) . '`');
 }
 
 if (is_multisite()) {
-	$site_ids = get_sites(['fields' => 'ids', 'number' => 0]);
-	foreach ($site_ids as $site_id) {
-		switch_to_blog((int) $site_id);
+	$delete_guard_site_ids = get_sites(['fields' => 'ids', 'number' => 0]);
+	foreach ($delete_guard_site_ids as $delete_guard_site_id) {
+		switch_to_blog((int) $delete_guard_site_id);
 		delete_guard_uninstall_site();
 		restore_current_blog();
 	}

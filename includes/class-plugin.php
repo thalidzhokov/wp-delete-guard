@@ -44,6 +44,8 @@ final class Plugin {
 	}
 
 	public function init(): void {
+		// Bundled translations (e.g. ru_RU); on wordpress.org language packs load automatically.
+		// phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
 		load_plugin_textdomain(
 			'delete-guard',
 			false,

@@ -60,11 +60,13 @@ final class Admin {
 
 		if ($action === 'save_settings') {
 			check_admin_referer(self::NONCE_SETTINGS);
-			$rows = isset($_POST['settings']) && is_array($_POST['settings'])
-				? wp_unslash($_POST['settings'])
-				: [];
+			$raw_settings = [];
+			if (isset($_POST['settings']) && is_array($_POST['settings'])) {
+				// Sanitized field-by-field below.
+				$raw_settings = map_deep(wp_unslash($_POST['settings']), 'sanitize_text_field');
+			}
 			$parsed = [];
-			foreach ($rows as $post_type => $row) {
+			foreach ($raw_settings as $post_type => $row) {
 				if (!is_string($post_type) || !is_array($row)) {
 					continue;
 				}
@@ -99,27 +101,31 @@ final class Admin {
 			return;
 		}
 
-		$tab = isset($_GET['tab']) ? sanitize_key((string) wp_unslash($_GET['tab'])) : 'settings';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only GET UI; capability checked above.
+		$tab = isset($_GET['tab']) ? sanitize_key(wp_unslash($_GET['tab'])) : 'settings';
 		if (!in_array($tab, ['settings', 'log'], true)) {
 			$tab = 'settings';
 		}
 
+		$updated = isset($_GET['updated']);
+		$purged = isset($_GET['purged']) ? (int) $_GET['purged'] : null;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
+
 		echo '<div class="wrap">';
 		echo '<h1>' . esc_html__('Delete Guard', 'delete-guard') . '</h1>';
 
-		if (isset($_GET['updated'])) {
+		if ($updated) {
 			echo '<div class="notice notice-success is-dismissible"><p>'
 				. esc_html__('Settings saved.', 'delete-guard')
 				. '</p></div>';
 		}
-		if (isset($_GET['purged'])) {
-			$count = (int) $_GET['purged'];
+		if ($purged !== null) {
 			echo '<div class="notice notice-success is-dismissible"><p>';
 			echo esc_html(
 				sprintf(
 					/* translators: %d: number of deleted log rows */
-					_n('%d log entry deleted.', '%d log entries deleted.', $count, 'delete-guard'),
-					$count
+					_n('%d log entry deleted.', '%d log entries deleted.', $purged, 'delete-guard'),
+					$purged
 				)
 			);
 			echo '</p></div>';
@@ -247,10 +253,12 @@ final class Admin {
 	}
 
 	private function render_log_tab(): void {
-		$status = isset($_GET['status']) ? sanitize_key((string) wp_unslash($_GET['status'])) : '';
-		$action = isset($_GET['log_action']) ? sanitize_key((string) wp_unslash($_GET['log_action'])) : '';
-		$post_type = isset($_GET['post_type']) ? sanitize_key((string) wp_unslash($_GET['post_type'])) : '';
+		// phpcs:disable WordPress.Security.NonceVerification.Recommended -- read-only GET filters; capability checked in render_page().
+		$status = isset($_GET['status']) ? sanitize_key(wp_unslash($_GET['status'])) : '';
+		$action = isset($_GET['log_action']) ? sanitize_key(wp_unslash($_GET['log_action'])) : '';
+		$post_type = isset($_GET['post_type']) ? sanitize_key(wp_unslash($_GET['post_type'])) : '';
 		$paged = isset($_GET['paged']) ? max(1, (int) $_GET['paged']) : 1;
+		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 
 		$result = Logger::query([
 			'status' => in_array($status, [Logger::STATUS_ALLOWED, Logger::STATUS_DENIED], true) ? $status : '',
@@ -294,8 +302,12 @@ final class Admin {
 		echo '<p><button class="button">' . esc_html__('Filter', 'delete-guard') . '</button></p>';
 		echo '</form>';
 
-		$confirm = esc_js(__('Delete log entries older than 30 days?', 'delete-guard'));
-		echo '<form method="post" style="margin-bottom:16px" onsubmit="return confirm(\'' . $confirm . '\');">';
+		$confirm = wp_json_encode(
+			__('Delete log entries older than 30 days?', 'delete-guard'),
+			JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT
+		);
+		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- JSON_HEX_* encoded for JavaScript confirm().
+		echo '<form method="post" style="margin-bottom:16px" onsubmit="return confirm(' . $confirm . ');">';
 		wp_nonce_field(self::NONCE_PURGE);
 		echo '<input type="hidden" name="delete_guard_action" value="purge_logs" />';
 		submit_button(__('Delete logs older than 30 days', 'delete-guard'), 'secondary', 'submit', false);
@@ -315,6 +327,12 @@ final class Admin {
 			echo '<tr><td colspan="6">' . esc_html__('No entries.', 'delete-guard') . '</td></tr>';
 		}
 
+		$post_kses = [
+			'a' => ['href' => true],
+			'br' => true,
+			'code' => true,
+		];
+
 		foreach ($result['items'] as $item) {
 			$user_label = $this->format_user((int) $item->user_id);
 			$post_label = $this->format_post_link(
@@ -329,7 +347,7 @@ final class Admin {
 			echo '<td>' . esc_html($this->action_labels()[$item->action] ?? $item->action) . '</td>';
 			echo '<td>' . esc_html($user_label) . '</td>';
 			echo '<td><code>' . esc_html((string) $item->source) . '</code></td>';
-			echo '<td>' . $post_label . '</td>';
+			echo '<td>' . wp_kses($post_label, $post_kses) . '</td>';
 			echo '</tr>';
 		}
 
@@ -338,12 +356,15 @@ final class Admin {
 		$total_pages = (int) ceil($result['total'] / 50);
 		if ($total_pages > 1) {
 			echo '<div class="tablenav"><div class="tablenav-pages">';
-			echo paginate_links([
+			$pagination = paginate_links([
 				'base' => add_query_arg('paged', '%#%', $base),
 				'format' => '',
 				'current' => $paged,
 				'total' => $total_pages,
 			]);
+			if (is_string($pagination)) {
+				echo wp_kses_post($pagination);
+			}
 			echo '</div></div>';
 		}
 	}

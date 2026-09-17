@@ -69,6 +69,7 @@ final class Logger {
 			return;
 		}
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- custom log table.
 		$wpdb->insert(
 			self::table_name(),
 			[
@@ -92,41 +93,56 @@ final class Logger {
 	public static function query(array $args = []): array {
 		global $wpdb;
 
-		$table = self::table_name();
-		$where = ['1=1'];
-		$params = [];
-
-		if (!empty($args['status'])) {
-			$where[] = 'status = %s';
-			$params[] = $args['status'];
-		}
-		if (!empty($args['action'])) {
-			$where[] = 'action = %s';
-			$params[] = $args['action'];
-		}
-		if (!empty($args['post_type'])) {
-			$where[] = 'post_type = %s';
-			$params[] = $args['post_type'];
-		}
-		if (isset($args['user_id']) && $args['user_id'] !== '' && $args['user_id'] !== null) {
-			$where[] = 'user_id = %d';
-			$params[] = (int) $args['user_id'];
-		}
-
-		$where_sql = implode(' AND ', $where);
 		$per_page = max(1, min(200, (int) ($args['per_page'] ?? 50)));
 		$paged = max(1, (int) ($args['paged'] ?? 1));
 		$offset = ($paged - 1) * $per_page;
 
-		$count_sql = "SELECT COUNT(*) FROM {$table} WHERE {$where_sql}";
-		$list_sql = "SELECT * FROM {$table} WHERE {$where_sql} ORDER BY id DESC LIMIT %d OFFSET %d";
+		$status = isset($args['status']) ? sanitize_key((string) $args['status']) : '';
+		$action = isset($args['action']) ? sanitize_key((string) $args['action']) : '';
+		$post_type = isset($args['post_type']) ? sanitize_key((string) $args['post_type']) : '';
+		$user_filter = array_key_exists('user_id', $args) && $args['user_id'] !== '' && $args['user_id'] !== null;
+		$user_id = $user_filter ? (int) $args['user_id'] : 0;
+
+		$where = '1=1';
+		$params = [];
+
+		if ($status !== '') {
+			$where .= ' AND status = %s';
+			$params[] = $status;
+		}
+		if ($action !== '') {
+			$where .= ' AND action = %s';
+			$params[] = $action;
+		}
+		if ($post_type !== '') {
+			$where .= ' AND post_type = %s';
+			$params[] = $post_type;
+		}
+		if ($user_filter) {
+			$where .= ' AND user_id = %d';
+			$params[] = $user_id;
+		}
+
+		$count_sql = "SELECT COUNT(*) FROM {$wpdb->prefix}delete_guard_log WHERE {$where}";
+		$list_sql = "SELECT * FROM {$wpdb->prefix}delete_guard_log WHERE {$where} ORDER BY id DESC LIMIT %d OFFSET %d";
 
 		if ($params) {
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- $where is built from fixed fragments + placeholders; values bound via prepare().
 			$total = (int) $wpdb->get_var($wpdb->prepare($count_sql, $params));
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 			$items = $wpdb->get_results($wpdb->prepare($list_sql, array_merge($params, [$per_page, $offset])));
 		} else {
-			$total = (int) $wpdb->get_var($count_sql);
-			$items = $wpdb->get_results($wpdb->prepare($list_sql, [$per_page, $offset]));
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter -- no user-supplied SQL; table from $wpdb->prefix.
+			$total = (int) $wpdb->get_var($wpdb->prepare("SELECT COUNT(*) FROM {$wpdb->prefix}delete_guard_log WHERE 1=%d", 1));
+			// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+			$items = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT * FROM {$wpdb->prefix}delete_guard_log WHERE 1=%d ORDER BY id DESC LIMIT %d OFFSET %d",
+					1,
+					$per_page,
+					$offset
+				)
+			);
 		}
 
 		return [
@@ -139,15 +155,15 @@ final class Logger {
 		global $wpdb;
 
 		$days = max(1, $days);
-		$table = self::table_name();
 		$cutoff_local = get_date_from_gmt(
 			gmdate('Y-m-d H:i:s', time() - ($days * DAY_IN_SECONDS)),
 			'Y-m-d H:i:s'
 		);
 
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 		$deleted = $wpdb->query(
 			$wpdb->prepare(
-				"DELETE FROM {$table} WHERE created_at < %s",
+				"DELETE FROM {$wpdb->prefix}delete_guard_log WHERE created_at < %s",
 				$cutoff_local
 			)
 		);
