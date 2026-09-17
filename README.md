@@ -73,9 +73,21 @@ See [tests/README.md](tests/README.md).
 php wp-content/plugins/delete-guard/tests/run.php
 ```
 
+### Release zip
+
+Build a WordPress.org-ready archive (no `.git`, no `tests/`, no `bin/`):
+
+```bash
+php bin/build-zip.php
+```
+
+Output: `releases/delete-guard-{version}.zip` (folder root inside the zip is `delete-guard/`).
+
+Upload that zip on https://wordpress.org/plugins/developers/add/
+
 ### License
 
-GPLv2 or later (WordPress plugin license).
+GPLv2 or later (WordPress plugin license). See `license.txt`.
 
 ---
 
@@ -142,6 +154,18 @@ git clone https://github.com/thalidzhokov/wp-delete-guard.git wp-content/plugins
 php wp-content/plugins/delete-guard/tests/run.php
 ```
 
+### Релизный zip
+
+Сборка архива для wordpress.org (без `.git`, без `tests/`, без `bin/`):
+
+```bash
+php bin/build-zip.php
+```
+
+Результат: `releases/delete-guard-{version}.zip` (внутри корень папки `delete-guard/`).
+
+Этот zip загружают на https://ru.wordpress.org/plugins/developers/add/
+
 ### Лицензия
 
-GPLv2 или позднее (как у плагинов WordPress).
+GPLv2 или позднее (как у плагинов WordPress). См. `license.txt`.

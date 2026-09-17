@@ -1,0 +1,5 @@
+# Built release archives (keep latest zip(s) in git).
+# Rebuild: php bin/build-zip.php
+*
+!.gitignore
+!*.zip
