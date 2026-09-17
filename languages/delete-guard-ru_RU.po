@@ -1,0 +1,125 @@
+# Copyright (C) 2026 Albert Thalidzhokov
+# This file is distributed under the same license as the Delete Guard plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: Delete Guard 1.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/thalidzhokov/wp-delete-guard\n"
+"Last-Translator: Albert Thalidzhokov\n"
+"Language-Team: Russian\n"
+"Language: ru_RU\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Domain: delete-guard\n"
+
+msgid "Delete Guard"
+msgstr "Delete Guard"
+
+msgid "Per post type deletion policies: logging, trash blocking, and permanent delete protection."
+msgstr "Политики удаления постов по типу: логирование, запрет корзины и полного удаления."
+
+msgid "Settings saved."
+msgstr "Настройки сохранены."
+
+msgid "%d log entry deleted."
+msgid_plural "%d log entries deleted."
+msgstr[0] "Удалена %d запись лога."
+msgstr[1] "Удалено %d записи лога."
+msgstr[2] "Удалено записей лога: %d."
+
+msgid "Settings"
+msgstr "Настройки"
+
+msgid "Log"
+msgstr "Лог"
+
+msgid "New post types are off by default. Administrators and super admins can delete even when a mode blocks it; those actions are still logged."
+msgstr "По умолчанию для новых типов режим выключен. Администраторы и суперадмины могут удалять при любом запрете; действие всё равно пишется в лог."
+
+msgid "Current <code>EMPTY_TRASH_DAYS</code>: <strong>%s</strong>."
+msgstr "Текущий <code>EMPTY_TRASH_DAYS</code>: <strong>%s</strong>."
+
+msgid "Post type"
+msgstr "Тип поста"
+
+msgid "Mode"
+msgstr "Режим"
+
+msgid "Allow EMPTY_TRASH_DAYS cleanup"
+msgstr "Разрешить удаление по EMPTY_TRASH_DAYS"
+
+msgid "Via cron"
+msgstr "Через cron"
+
+msgid "Save settings"
+msgstr "Сохранить настройки"
+
+msgid "Status"
+msgstr "Статус"
+
+msgid "All"
+msgstr "Все"
+
+msgid "Action"
+msgstr "Действие"
+
+msgid "Type"
+msgstr "Тип"
+
+msgid "Filter"
+msgstr "Фильтр"
+
+msgid "Delete log entries older than 30 days?"
+msgstr "Удалить логи старше 30 дней?"
+
+msgid "Delete logs older than 30 days"
+msgstr "Удалить логи старше 30 дней"
+
+msgid "Date"
+msgstr "Дата"
+
+msgid "User"
+msgstr "Пользователь"
+
+msgid "Source"
+msgstr "Источник"
+
+msgid "Post"
+msgstr "Пост"
+
+msgid "No entries."
+msgstr "Записей нет."
+
+msgid "Off"
+msgstr "Выключено"
+
+msgid "Log only"
+msgstr "Только логирование"
+
+msgid "Block trash"
+msgstr "Запрет на перемещение в корзину"
+
+msgid "Block permanent delete"
+msgstr "Запрет на полное удаление"
+
+msgid "Allowed"
+msgstr "Одобрено"
+
+msgid "Denied"
+msgstr "Отказ"
+
+msgid "Move to trash"
+msgstr "В корзину"
+
+msgid "Permanent delete"
+msgstr "Полное удаление"
+
+msgid "Restore"
+msgstr "Восстановление"
+
+msgid "System"
+msgstr "Система"
+
+msgid "(no title)"
+msgstr "(без названия)"

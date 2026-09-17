@@ -2,11 +2,12 @@
 /**
  * Plugin Name: Delete Guard
  * Plugin URI: https://github.com/thalidzhokov/wp-delete-guard
- * Description: Политики удаления постов по типу: логирование, запрет корзины и полного удаления.
+ * Description: Per post type deletion policies: logging, trash blocking, and permanent delete protection.
  * Version: 1.0.0
  * Author: Albert Thalidzhokov
  * Author URI: https://github.com/thalidzhokov/wp-delete-guard
  * Text Domain: delete-guard
+ * Domain Path: /languages
  * Requires at least: 6.0
  * Requires PHP: 8.0
  */

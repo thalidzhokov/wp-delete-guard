@@ -18,6 +18,10 @@ final class Plugin {
 		return self::$instance;
 	}
 
+	public function guard(): Guard {
+		return $this->guard;
+	}
+
 	private function __construct() {
 		$this->guard = new Guard();
 		$this->admin = new Admin();
@@ -40,6 +44,12 @@ final class Plugin {
 	}
 
 	public function init(): void {
+		load_plugin_textdomain(
+			'delete-guard',
+			false,
+			dirname(plugin_basename(DELETE_GUARD_FILE)) . '/languages'
+		);
+
 		if ((string) get_option('delete_guard_db_version', '') !== DELETE_GUARD_VERSION) {
 			Logger::create_table();
 			update_option('delete_guard_db_version', DELETE_GUARD_VERSION, false);

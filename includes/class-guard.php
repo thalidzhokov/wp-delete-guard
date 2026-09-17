@@ -166,4 +166,8 @@ final class Guard {
 			]
 		));
 	}
+
+	public function clear_logged_keys(): void {
+		$this->logged_keys = [];
+	}
 }
