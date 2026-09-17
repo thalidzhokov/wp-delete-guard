@@ -1,0 +1,8 @@
+# IDE / OS
+.DS_Store
+Thumbs.db
+*.log
+
+# Local env
+.env
+.env.*
