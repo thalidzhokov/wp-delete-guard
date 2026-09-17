@@ -12,6 +12,8 @@ Per post type deletion policies: logging, trash blocking, and permanent delete p
 
 == Description ==
 
+A must-have for administrators and site owners with a large team of editors and authors.
+
 Delete Guard lets you control how posts are trashed and permanently deleted, per post type.
 
 **Modes**

@@ -12,6 +12,8 @@ WordPress plugin: per post type deletion policies — logging, trash blocking, a
 
 ## English
 
+A must-have for administrators and site owners with a large team of editors and authors.
+
 ### Features
 
 - Modes per post type: **Off**, **Log only**, **Block trash**, **Block permanent delete**
@@ -102,6 +104,8 @@ GPLv2 or later (WordPress plugin license). See `license.txt`.
 ---
 
 ## Русский
+
+Must-have для администраторов и владельцев сайтов с большой командой редакторов и авторов.
 
 ### Возможности
 
