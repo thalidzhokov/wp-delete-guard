@@ -11,7 +11,7 @@
 Creates a WordPress.org-ready zip in `../releases/`.
 
 **Included:** plugin PHP, `readme.txt`, `license.txt`, `README.md`, `languages/`, `uninstall.php`  
-**Excluded:** `.git`, `tests/`, `bin/`, `releases/`, `.gitignore`
+**Excluded:** `.git`, `tests/`, `bin/`, `releases/`, `.gitignore`, `.distignore`
 
 #### Run
 
@@ -50,7 +50,7 @@ Requires PHP with the `ZipArchive` extension.
 Собирает zip для wordpress.org в `../releases/`.
 
 **В архиве:** PHP плагина, `readme.txt`, `license.txt`, `README.md`, `languages/`, `uninstall.php`  
-**Не попадает:** `.git`, `tests/`, `bin/`, `releases/`, `.gitignore`
+**Не попадает:** `.git`, `tests/`, `bin/`, `releases/`, `.gitignore`, `.distignore`
 
 #### Запуск
 

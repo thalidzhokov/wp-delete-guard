@@ -1,0 +1,10 @@
+# Paths excluded from the WordPress.org distribution zip / deploy.
+.git
+.gitignore
+.gitattributes
+.distignore
+.DS_Store
+bin
+tests
+releases
+*.log

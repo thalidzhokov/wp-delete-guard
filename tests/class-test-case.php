@@ -82,8 +82,8 @@ abstract class Test_Case {
 		if ($expected !== $actual) {
 			$this->failures[] = $message . sprintf(
 				' (expected %s, got %s)',
-				var_export($expected, true),
-				var_export($actual, true)
+				wp_json_encode($expected),
+				wp_json_encode($actual)
 			);
 		}
 	}
@@ -156,10 +156,10 @@ abstract class Test_Case {
 	 */
 	protected function latest_logs(int $post_id, int $limit = 20): array {
 		global $wpdb;
-		$table = \Delete_Guard\Logger::table_name();
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared -- test helper; table name from Logger::table_name().
 		$rows = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE post_id = %d ORDER BY id DESC LIMIT %d",
+				"SELECT * FROM {$wpdb->prefix}delete_guard_log WHERE post_id = %d ORDER BY id DESC LIMIT %d",
 				$post_id,
 				$limit
 			)
@@ -170,6 +170,7 @@ abstract class Test_Case {
 
 	protected function clear_logs_for_post(int $post_id): void {
 		global $wpdb;
+		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- test helper cleanup.
 		$wpdb->delete(\Delete_Guard\Logger::table_name(), ['post_id' => $post_id], ['%d']);
 		\Delete_Guard\Plugin::instance()->guard()->clear_logged_keys();
 	}

@@ -85,6 +85,14 @@ Output: `releases/delete-guard-{version}.zip` (folder root inside the zip is `de
 
 Upload that zip on https://wordpress.org/plugins/developers/add/
 
+### Plugin Check
+
+Scan distributable code (skip local build/test artifacts and the release zip):
+
+```bash
+wp plugin check delete-guard --exclude-directories=bin,tests,releases --exclude-files=.gitignore,.distignore
+```
+
 ### License
 
 GPLv2 or later (WordPress plugin license). See `license.txt`.
@@ -165,6 +173,14 @@ php bin/build-zip.php
 Результат: `releases/delete-guard-{version}.zip` (внутри корень папки `delete-guard/`).
 
 Этот zip загружают на https://ru.wordpress.org/plugins/developers/add/
+
+### Plugin Check
+
+Проверка дистрибутивного кода (без локальных bin/tests и zip):
+
+```bash
+wp plugin check delete-guard --exclude-directories=bin,tests,releases --exclude-files=.gitignore,.distignore
+```
 
 ### Лицензия
 
