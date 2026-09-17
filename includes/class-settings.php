@@ -37,11 +37,17 @@ final class Settings {
 	 */
 	public static function for_post_type(string $post_type): array {
 		$all = self::all();
-		if (!isset($all[$post_type])) {
-			return self::default_row();
+		if (isset($all[$post_type])) {
+			return $all[$post_type];
 		}
 
-		return $all[$post_type];
+		// Appearance → Menus stores items as nav_menu_item (no show_ui). Inherit
+		// Navigation Menus policy so one setting covers both menu UIs when unset.
+		if ($post_type === 'nav_menu_item' && isset($all['wp_navigation'])) {
+			return $all['wp_navigation'];
+		}
+
+		return self::default_row();
 	}
 
 	/**

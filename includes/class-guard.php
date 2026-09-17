@@ -38,6 +38,9 @@ final class Guard {
 			return false;
 		}
 
+		// Log before trash so nav_menu_item still has terms/meta for the title snapshot.
+		$this->log_once($post, Logger::ACTION_TRASH, Logger::STATUS_ALLOWED);
+
 		return $check;
 	}
 
@@ -98,6 +101,9 @@ final class Guard {
 			}
 			return false;
 		}
+
+		// Log before delete so nav_menu_item still has terms/meta for the title snapshot.
+		$this->log_once($post, Logger::ACTION_DELETE, Logger::STATUS_ALLOWED);
 
 		return null;
 	}

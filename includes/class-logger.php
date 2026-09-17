@@ -200,7 +200,44 @@ final class Logger {
 		return [
 			'post_id' => (int) $post->ID,
 			'post_type' => (string) $post->post_type,
-			'post_title' => (string) $post->post_title,
+			'post_title' => self::resolve_post_title($post),
 		];
+	}
+
+	private static function resolve_post_title(\WP_Post $post): string {
+		if ($post->post_type === 'nav_menu_item') {
+			return self::nav_menu_item_label($post);
+		}
+
+		return (string) $post->post_title;
+	}
+
+	/**
+	 * Classic menus: term name is the menu; item post_title is often empty for page links.
+	 */
+	private static function nav_menu_item_label(\WP_Post $post): string {
+		$item_title = '';
+		$item = wp_setup_nav_menu_item($post);
+		if (is_object($item) && isset($item->title)) {
+			$item_title = wp_strip_all_tags((string) $item->title);
+		}
+		if ($item_title === '' && $post->post_title !== '') {
+			$item_title = (string) $post->post_title;
+		}
+
+		$menu_name = '';
+		$menus = wp_get_object_terms((int) $post->ID, 'nav_menu', ['fields' => 'names']);
+		if (!is_wp_error($menus) && isset($menus[0]) && is_string($menus[0]) && $menus[0] !== '') {
+			$menu_name = $menus[0];
+		}
+
+		if ($menu_name !== '' && $item_title !== '') {
+			return $menu_name . ' › ' . $item_title;
+		}
+		if ($menu_name !== '') {
+			return $menu_name;
+		}
+
+		return $item_title;
 	}
 }

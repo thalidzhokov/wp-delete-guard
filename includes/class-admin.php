@@ -159,9 +159,11 @@ final class Admin {
 	private function render_settings_tab(): void {
 		$stored = Settings::all();
 		$post_types = get_post_types(['show_ui' => true], 'objects');
-		$attachment = get_post_type_object('attachment');
-		if ($attachment && !isset($post_types['attachment'])) {
-			$post_types['attachment'] = $attachment;
+		foreach (['attachment', 'nav_menu_item'] as $extra) {
+			$object = get_post_type_object($extra);
+			if ($object && !isset($post_types[$extra])) {
+				$post_types[$extra] = $object;
+			}
 		}
 
 		uasort($post_types, static function ($a, $b): int {
@@ -170,6 +172,10 @@ final class Admin {
 
 		echo '<p>' . esc_html__(
 			'New post types are off by default. Administrators and super admins can delete even when a mode blocks it; those actions are still logged.',
+			'delete-guard'
+		) . '</p>';
+		echo '<p>' . esc_html__(
+			'Navigation Menus (wp_navigation) are block-theme menus. Classic Appearance → Menus use Navigation Menu items (nav_menu_item); if that row is Off, it follows the Navigation Menus mode.',
 			'delete-guard'
 		) . '</p>';
 		echo '<p>' . wp_kses(
@@ -376,8 +382,8 @@ final class Admin {
 		return [
 			Settings::MODE_OFF => __('Off', 'delete-guard'),
 			Settings::MODE_LOG => __('Log only', 'delete-guard'),
-			Settings::MODE_BLOCK_TRASH => __('Block trash', 'delete-guard'),
 			Settings::MODE_BLOCK_DELETE => __('Block permanent delete', 'delete-guard'),
+			Settings::MODE_BLOCK_TRASH => __('Block trash', 'delete-guard'),
 		];
 	}
 
