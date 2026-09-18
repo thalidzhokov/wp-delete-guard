@@ -14,11 +14,8 @@ return [
 		'Delete Guard' => 'Delete Guard',
 		'Per post type deletion policies: logging, trash blocking, and permanent delete protection.' => 'Политики удаления постов по типу: логирование, запрет корзины и полного удаления.',
 		'Settings saved.' => 'Настройки сохранены.',
-		'%d log entry deleted.' . "\0" . '%d log entries deleted.' => [
-			'Удалена %d запись лога.',
-			'Удалено %d записи лога.',
-			'Удалено записей лога: %d.',
-		],
+		'%d log entry deleted.' . "\0" . '%d log entries deleted.' =>
+			'Удалена %d запись лога.' . "\0" . 'Удалено %d записи лога.' . "\0" . 'Удалено записей лога: %d.',
 		'Settings' => 'Настройки',
 		'Log' => 'Лог',
 		'New post types are off by default. Administrators and super admins can delete even when a mode blocks it; those actions are still logged.' => 'По умолчанию для новых типов режим выключен. Администраторы и суперадмины могут удалять при любом запрете; действие всё равно пишется в лог.',
