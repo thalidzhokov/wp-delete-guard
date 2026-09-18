@@ -176,13 +176,13 @@ final class Logger {
 	}
 
 	public static function detect_source(): string {
-		if (defined('WP_CLI') && WP_CLI) {
+		if (defined('WP_CLI') && \WP_CLI) {
 			return 'cli';
 		}
 		if (wp_doing_cron()) {
 			return 'cron';
 		}
-		if (defined('REST_REQUEST') && REST_REQUEST) {
+		if (defined('REST_REQUEST') && \REST_REQUEST) {
 			return 'rest';
 		}
 		if (is_admin()) {
