@@ -5,7 +5,7 @@
  * Description: Per post type deletion policies: logging, trash blocking, and permanent delete protection.
  * Version: 1.0.2
  * Author: Albert Thalidzhokov
- * Author URI: https://github.com/thalidzhokov/wp-delete-guard
+ * Author URI: https://thalidzhokov.ru
  * Text Domain: delete-guard
  * Domain Path: /languages
  * Requires at least: 6.0
