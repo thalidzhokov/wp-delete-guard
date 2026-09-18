@@ -4,7 +4,7 @@
  *
  * Usage:
  *   php bin/build-zip.php
- *   php bin/build-zip.php --version=1.0.0
+ *   php bin/build-zip.php --version=1.0.2
  *
  * From Docker (project root):
  *   docker compose exec -T php php /var/www/html/wp-content/plugins/delete-guard/bin/build-zip.php

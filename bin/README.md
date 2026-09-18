@@ -24,7 +24,7 @@ php bin/build-zip.php
 Optional version override (default: `Version` from `delete-guard.php`):
 
 ```bash
-php bin/build-zip.php --version=1.0.0
+php bin/build-zip.php --version=1.0.2
 ```
 
 Docker (project root):
@@ -63,7 +63,7 @@ php bin/build-zip.php
 Версия вручную (по умолчанию берётся `Version` из `delete-guard.php`):
 
 ```bash
-php bin/build-zip.php --version=1.0.0
+php bin/build-zip.php --version=1.0.2
 ```
 
 Docker (корень проекта):

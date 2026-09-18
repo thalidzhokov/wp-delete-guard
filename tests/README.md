@@ -77,7 +77,7 @@ Why: ensure `pre_*` filters block all delete paths, not only the UI.
 
 Log row shape and log-only mode:
 
-- `user_id`, `post_type`, `post_title`, `source`, `created_at`;
+- `user_id`, `post_type`, `post_title`, `source` (user role(s), or `cli` / `cron` / `rest` / `code`), `created_at`;
 - title snapshot remains after hard delete;
 - `purge_older_than_days` runs without error.
 
@@ -164,7 +164,7 @@ php wp-content/plugins/delete-guard/tests/run.php
 
 Состав строки лога и режим «только логирование»:
 
-- есть user_id, post_type, post_title, source, created_at;
+- есть user_id, post_type, post_title, source (роль(и), либо `cli` / `cron` / `rest` / `code`), created_at;
 - после полного удаления title в логе остаётся (снимок);
 - `purge_older_than_days` отрабатывает без ошибки.
 

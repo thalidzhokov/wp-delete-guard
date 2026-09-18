@@ -16,10 +16,13 @@ A must-have for administrators and site owners with a large team of editors and 
 
 ### Features
 
-- Modes per post type: **Off**, **Log only**, **Block trash**, **Block permanent delete**
+- Modes per post type: **Off**, **Log only**, **Block permanent delete**, **Block trash**
 - Optional `EMPTY_TRASH_DAYS` cron cleanup when permanent delete is blocked
 - Audit log: allowed and denied attempts (trash, permanent delete, restore)
+- Log **source** stores the actor’s role(s) (e.g. `editor`), or `cli` / `cron` / `rest` / `code`
 - Administrators and network super admins bypass blocks; actions are still logged
+- In wp-admin, a blocked trash/delete returns to the list with an error notice (not a blank `wp_die` screen)
+- Settings: users with `manage_options` only (typically administrators)
 - Multisite: settings and log table are per site
 - UI: Settings → Delete Guard (Settings + Log tabs)
 - Languages: English (default), Russian (`ru_RU`)
@@ -60,6 +63,8 @@ Blocks run through WordPress filters (not UI-only):
 - `pre_delete_attachment`
 
 Allowed trash/delete are logged in those `pre_*` filters (before the post is removed). Restore is logged on `untrashed_post`. Denied attempts are logged when the block runs.
+
+In the classic admin list/editor, a denied trash or permanent delete redirects back to the referring screen with a dismissible error notice instead of WordPress’s generic `wp_die` error page.
 
 If cron cleanup is denied, `_wp_trash_meta_time` is refreshed so `wp_scheduled_delete` does not retry the same post every day.
 
@@ -109,10 +114,13 @@ Must-have для администраторов и владельцев сайт
 
 ### Возможности
 
-- Режимы по типу поста: **Выключено**, **Только логирование**, **Запрет корзины**, **Запрет полного удаления**
+- Режимы по типу поста: **Выключено**, **Только логирование**, **Запрет полного удаления**, **Запрет корзины**
 - Опциональная очистка по `EMPTY_TRASH_DAYS` (cron), если запрещено полное удаление
 - Лог: одобренные и отклонённые попытки (корзина, удаление навсегда, восстановление)
+- В **источнике** лога — роль(и) пользователя (например `editor`), либо `cli` / `cron` / `rest` / `code`
 - Администраторы и суперадмины сети обходят запреты; действия всё равно пишутся в лог
+- В админке при блокировке — возврат к списку с error-notice (не отдельная страница `wp_die`)
+- Настройки: только с правом `manage_options` (обычно администраторы)
 - Multisite: настройки и таблица лога — на каждый сайт
 - UI: Настройки → Delete Guard (вкладки «Настройки» и «Лог»)
 - Языки: английский (по умолчанию), русский (`ru_RU`)
@@ -153,6 +161,8 @@ git clone https://github.com/thalidzhokov/wp-delete-guard.git wp-content/plugins
 - `pre_delete_attachment`
 
 Одобренные trash/delete пишутся в этих `pre_*` (до удаления поста). Восстановление — на `untrashed_post`. Отказы — в момент блокировки.
+
+В классической админке (список / редактор) при отказе — редирект обратно с dismissible error-notice, а не общая страница ошибки WordPress (`wp_die`).
 
 Если cron-очистка запрещена, обновляется `_wp_trash_meta_time`, чтобы `wp_scheduled_delete` не долбил один и тот же пост каждый день.
 

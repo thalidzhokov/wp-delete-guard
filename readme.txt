@@ -32,7 +32,10 @@ Delete Guard lets you control how posts are trashed and permanently deleted, per
 **Also**
 
 * Audit log for allowed and denied attempts (trash, permanent delete, restore)
+* Log source stores the user’s role(s) (e.g. `editor`), or `cli` / `cron` / `rest` / `code`
 * Administrators and network super admins bypass blocks; actions are still logged
+* In wp-admin, blocked trash/delete returns to the list with an error notice
+* Settings require the `manage_options` capability
 * Multisite: settings and log table are per site
 * English UI by default; Russian translation included (`ru_RU`)
 
@@ -46,6 +49,10 @@ Settings: **Settings → Delete Guard**.
 
 == Frequently Asked Questions ==
 
+= Who can change plugin settings? =
+
+Users with the `manage_options` capability (typically administrators).
+
 = Who can bypass deletion blocks? =
 
 Users with the `administrator` role, and network super admins on Multisite. Their actions are still written to the log.
@@ -56,7 +63,11 @@ In **Block permanent delete** mode you can allow or deny cleanup based on `EMPTY
 
 = Where is the log stored? =
 
-In the custom table `{prefix}delete_guard_log`. Logs are kept indefinitely; you can purge entries older than 30 days from the Log tab.
+In the custom table `{prefix}delete_guard_log`. The **source** column stores user role(s) for interactive actions, or `cli` / `cron` / `rest` / `code`. Logs are kept indefinitely; you can purge entries older than 30 days from the Log tab.
+
+= What happens when trash is blocked for an editor? =
+
+In wp-admin the user is sent back to the post list with an error notice from Delete Guard (not the generic WordPress error screen).
 
 = Why did deleting a classic menu not appear under Navigation Menus? =
 
@@ -67,13 +78,13 @@ Classic menus delete `nav_menu_item` posts. Configure that row, or leave it Off 
 = 1.0.2 =
 * Log source stores user roles (e.g. editor) instead of generic admin for wp-admin requests
 * Fix duplicate Settings saved notice on the settings screen
+* Blocked trash/delete in wp-admin redirects to the list with an admin notice
 
 = 1.0.1 =
 * Classic menus: show `nav_menu_item` in settings; inherit `wp_navigation` mode when unset
 * Clearer log titles for menu items (`Menu › Item`)
 * Log allowed trash/delete before the post is removed (keeps menu term/meta for the snapshot)
 * Dropdown order: Block permanent delete before Block trash
-* Blocked trash/delete redirects back to the list with an admin notice instead of wp_die
 
 = 1.0.0 =
 * Initial release: per post type modes, audit log, admin UI, RU/EN translations, functional tests.
@@ -81,7 +92,7 @@ Classic menus delete `nav_menu_item` posts. Configure that row, or leave it Off 
 == Upgrade Notice ==
 
 = 1.0.2 =
-Log source shows roles; settings notice no longer duplicates.
+Log source shows roles; settings notice no longer duplicates; blocked deletes show a list notice.
 
 = 1.0.1 =
 Fixes classic menu logging and titles; rebuild recommended if you use Appearance → Menus.
