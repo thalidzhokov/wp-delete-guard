@@ -12,9 +12,43 @@ final class Admin {
 	public function init(): void {
 		add_action('admin_menu', [$this, 'register_menu']);
 		add_action('admin_init', [$this, 'handle_post_actions']);
+		add_action('admin_notices', [$this, 'render_block_notice']);
+		add_filter('removable_query_args', [$this, 'removable_query_args']);
 		add_filter(
 			'plugin_action_links_' . plugin_basename(DELETE_GUARD_FILE),
 			[$this, 'plugin_action_links']
+		);
+	}
+
+	/**
+	 * @param list<string> $args
+	 * @return list<string>
+	 */
+	public function removable_query_args(array $args): array {
+		$args[] = 'delete_guard_blocked';
+		$args[] = 'dg_saved';
+		return $args;
+	}
+
+	public function render_block_notice(): void {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- read-only notice flag from redirect.
+		if (!isset($_GET['delete_guard_blocked'])) {
+			return;
+		}
+
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		$action = sanitize_key(wp_unslash((string) $_GET['delete_guard_blocked']));
+		if ($action === Logger::ACTION_DELETE) {
+			$message = __('Permanent deletion was blocked by Delete Guard.', 'delete-guard');
+		} elseif ($action === Logger::ACTION_TRASH) {
+			$message = __('Moving to Trash was blocked by Delete Guard.', 'delete-guard');
+		} else {
+			return;
+		}
+
+		printf(
+			'<div class="notice notice-error is-dismissible"><p>%s</p></div>',
+			esc_html($message)
 		);
 	}
 
@@ -79,7 +113,7 @@ final class Admin {
 			wp_safe_redirect(add_query_arg([
 				'page' => self::MENU_SLUG,
 				'tab' => 'settings',
-				'updated' => '1',
+				'dg_saved' => '1',
 			], admin_url('options-general.php')));
 			exit;
 		}
@@ -107,7 +141,7 @@ final class Admin {
 			$tab = 'settings';
 		}
 
-		$updated = isset($_GET['updated']);
+		$updated = isset($_GET['dg_saved']);
 		$purged = isset($_GET['purged']) ? (int) $_GET['purged'] : null;
 		// phpcs:enable WordPress.Security.NonceVerification.Recommended
 

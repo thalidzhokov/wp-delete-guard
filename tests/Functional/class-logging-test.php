@@ -30,6 +30,7 @@ final class Logging_Test extends Test_Case {
 			$this->assert_same('page', $log->post_type, 'log: post_type');
 			$this->assert_true($log->post_title !== '', 'log: post_title stored');
 			$this->assert_true($log->source !== '', 'log: source stored');
+			$this->assert_same('editor', $log->source, 'log: source is user role');
 			$this->assert_true($log->created_at !== '', 'log: created_at stored');
 		}
 

@@ -35,7 +35,7 @@ final class Logger {
 			post_id bigint(20) unsigned NOT NULL DEFAULT 0,
 			post_type varchar(64) NOT NULL DEFAULT '',
 			post_title text NOT NULL,
-			source varchar(20) NOT NULL DEFAULT 'code',
+			source varchar(64) NOT NULL DEFAULT 'code',
 			PRIMARY KEY  (id),
 			KEY created_at (created_at),
 			KEY post_id (post_id),
@@ -80,7 +80,7 @@ final class Logger {
 				'post_id' => isset($entry['post_id']) ? (int) $entry['post_id'] : 0,
 				'post_type' => isset($entry['post_type']) ? substr((string) $entry['post_type'], 0, 64) : '',
 				'post_title' => isset($entry['post_title']) ? (string) $entry['post_title'] : '',
-				'source' => isset($entry['source']) ? substr((string) $entry['source'], 0, 20) : self::detect_source(),
+				'source' => isset($entry['source']) ? substr((string) $entry['source'], 0, 64) : self::detect_source(),
 			],
 			['%s', '%s', '%s', '%d', '%d', '%s', '%s', '%s']
 		);
@@ -182,11 +182,26 @@ final class Logger {
 		if (wp_doing_cron()) {
 			return 'cron';
 		}
+
+		$user_id = get_current_user_id();
+		if ($user_id > 0) {
+			$user = get_userdata($user_id);
+			if ($user instanceof \WP_User && is_array($user->roles) && $user->roles !== []) {
+				$roles = [];
+				foreach ($user->roles as $role) {
+					if (is_string($role) && $role !== '') {
+						$roles[] = sanitize_key($role);
+					}
+				}
+				$roles = array_values(array_unique(array_filter($roles)));
+				if ($roles !== []) {
+					return substr(implode(',', $roles), 0, 64);
+				}
+			}
+		}
+
 		if (defined('REST_REQUEST') && \REST_REQUEST) {
 			return 'rest';
-		}
-		if (is_admin()) {
-			return 'admin';
 		}
 
 		return 'code';

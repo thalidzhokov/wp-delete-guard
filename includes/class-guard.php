@@ -8,6 +8,9 @@ final class Guard {
 	/** @var array<string, true> */
 	private array $logged_keys = [];
 
+	/** @var string|null trash|delete — set when an admin UI delete was blocked. */
+	private ?string $admin_block_action = null;
+
 	public function init(): void {
 		add_filter('pre_trash_post', [$this, 'filter_pre_trash_post'], 5, 3);
 		add_filter('pre_untrash_post', [$this, 'filter_pre_untrash_post'], 5, 3);
@@ -17,6 +20,8 @@ final class Guard {
 		add_action('trashed_post', [$this, 'on_trashed_post'], 10, 2);
 		add_action('untrashed_post', [$this, 'on_untrashed_post'], 10, 2);
 		add_action('deleted_post', [$this, 'on_deleted_post'], 10, 2);
+
+		add_filter('wp_die_handler', [$this, 'filter_wp_die_handler']);
 	}
 
 	/**
@@ -35,6 +40,7 @@ final class Guard {
 
 		if (!$decision['allow']) {
 			$this->log_once($post, Logger::ACTION_TRASH, Logger::STATUS_DENIED);
+			$this->mark_admin_block(Logger::ACTION_TRASH);
 			return false;
 		}
 
@@ -99,6 +105,7 @@ final class Guard {
 			if (wp_doing_cron() && $post->post_status === 'trash') {
 				update_post_meta($post->ID, '_wp_trash_meta_time', time());
 			}
+			$this->mark_admin_block(Logger::ACTION_DELETE);
 			return false;
 		}
 
@@ -155,6 +162,69 @@ final class Guard {
 		}
 
 		$this->log_once($post, Logger::ACTION_DELETE, Logger::STATUS_ALLOWED);
+	}
+
+	/**
+	 * @param callable $handler
+	 * @return callable
+	 */
+	public function filter_wp_die_handler($handler) {
+		if ($this->admin_block_action === null) {
+			return $handler;
+		}
+
+		return [$this, 'redirect_admin_block_die'];
+	}
+
+	/**
+	 * Replace wp_die() after a blocked trash/delete with a redirect back to the list.
+	 *
+	 * @param string|WP_Error $message
+	 * @param string|int      $title
+	 * @param string|array|int $args
+	 */
+	public function redirect_admin_block_die($message = '', $title = '', $args = []): void {
+		$action = $this->admin_block_action ?? Logger::ACTION_TRASH;
+		$this->admin_block_action = null;
+
+		$sendback = wp_get_referer();
+		if (!$sendback) {
+			$sendback = admin_url('edit.php');
+		}
+
+		$sendback = remove_query_arg(
+			['trashed', 'untrashed', 'deleted', 'locked', 'ids', 'delete_guard_blocked'],
+			$sendback
+		);
+		$sendback = add_query_arg('delete_guard_blocked', $action, $sendback);
+
+		wp_safe_redirect($sendback);
+		exit;
+	}
+
+	private function mark_admin_block(string $action): void {
+		if (!$this->should_redirect_admin_block()) {
+			return;
+		}
+
+		$this->admin_block_action = $action;
+	}
+
+	private function should_redirect_admin_block(): bool {
+		if (!is_admin()) {
+			return false;
+		}
+		if (wp_doing_ajax() || wp_doing_cron()) {
+			return false;
+		}
+		if (defined('REST_REQUEST') && REST_REQUEST) {
+			return false;
+		}
+		if (defined('WP_CLI') && \WP_CLI) {
+			return false;
+		}
+
+		return true;
 	}
 
 	private function log_once(\WP_Post $post, string $action, string $status): void {

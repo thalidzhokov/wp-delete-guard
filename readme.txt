@@ -4,7 +4,7 @@ Tags: delete, trash, security, audit log, permissions
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.0.1
+Stable tag: 1.0.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -64,16 +64,24 @@ Classic menus delete `nav_menu_item` posts. Configure that row, or leave it Off 
 
 == Changelog ==
 
+= 1.0.2 =
+* Log source stores user roles (e.g. editor) instead of generic admin for wp-admin requests
+* Fix duplicate Settings saved notice on the settings screen
+
 = 1.0.1 =
 * Classic menus: show `nav_menu_item` in settings; inherit `wp_navigation` mode when unset
 * Clearer log titles for menu items (`Menu › Item`)
 * Log allowed trash/delete before the post is removed (keeps menu term/meta for the snapshot)
 * Dropdown order: Block permanent delete before Block trash
+* Blocked trash/delete redirects back to the list with an admin notice instead of wp_die
 
 = 1.0.0 =
 * Initial release: per post type modes, audit log, admin UI, RU/EN translations, functional tests.
 
 == Upgrade Notice ==
+
+= 1.0.2 =
+Log source shows roles; settings notice no longer duplicates.
 
 = 1.0.1 =
 Fixes classic menu logging and titles; rebuild recommended if you use Appearance → Menus.

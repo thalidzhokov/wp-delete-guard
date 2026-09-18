@@ -65,7 +65,7 @@ If cron cleanup is denied, `_wp_trash_meta_time` is refreshed so `wp_scheduled_d
 
 ### Log
 
-Stored in `{prefix}delete_guard_log`. Fields: status, action, user, source (`admin` / `rest` / `cli` / `cron` / `code`), post snapshot (id, type, title), datetime.
+Stored in `{prefix}delete_guard_log`. Fields: status, action, user, source (user role(s), or `rest` / `cli` / `cron` / `code`), post snapshot (id, type, title), datetime.
 
 Logs are kept indefinitely. The Log tab has a button to delete entries older than 30 days.
 
@@ -158,7 +158,7 @@ git clone https://github.com/thalidzhokov/wp-delete-guard.git wp-content/plugins
 
 ### Лог
 
-Таблица `{prefix}delete_guard_log`. Поля: статус, действие, пользователь, источник (`admin` / `rest` / `cli` / `cron` / `code`), снимок поста (id, тип, title), дата/время.
+Таблица `{prefix}delete_guard_log`. Поля: статус, действие, пользователь, источник (роль(и) пользователя, либо `rest` / `cli` / `cron` / `code`), снимок поста (id, тип, title), дата/время.
 
 Хранение бессрочное. На вкладке «Лог» — кнопка удаления записей старше 30 дней.
 

@@ -2,7 +2,7 @@
 # This file is distributed under the same license as the Delete Guard plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: Delete Guard 1.0.1\n"
+"Project-Id-Version: Delete Guard 1.0.2\n"
 "Report-Msgid-Bugs-To: https://github.com/thalidzhokov/wp-delete-guard\n"
 "Last-Translator: Albert Thalidzhokov\n"
 "Language-Team: Russian\n"
@@ -126,3 +126,9 @@ msgstr "Система"
 
 msgid "(no title)"
 msgstr "(без названия)"
+
+msgid "Moving to Trash was blocked by Delete Guard."
+msgstr "Delete Guard запретил перемещение в корзину."
+
+msgid "Permanent deletion was blocked by Delete Guard."
+msgstr "Delete Guard запретил полное удаление."
